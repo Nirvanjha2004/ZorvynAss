@@ -7,44 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Role values: VIEWER | ANALYST | ADMIN
+// Status values: ACTIVE | INACTIVE
+// RecordType values: INCOME | EXPENSE
+// SQLite does not support enums; values are enforced at the application layer.
+
 model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
-  role      Role     @default(VIEWER)
-  status    Status   @default(ACTIVE)
+  role      String   @default("VIEWER")
+  status    String   @default("ACTIVE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   records   FinancialRecord[]
 }
 
 model FinancialRecord {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   amount      Float
-  type        RecordType
+  type        String
   category    String
   date        DateTime
   notes       String?
   deletedAt   DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  createdBy   User       @relation(fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User      @relation(fields: [createdById], references: [id])
   createdById String
-}
-
-enum Role {
-  VIEWER
-  ANALYST
-  ADMIN
-}
-
-enum Status {
-  ACTIVE
-  INACTIVE
-}
-
-enum RecordType {
-  INCOME
-  EXPENSE
 }

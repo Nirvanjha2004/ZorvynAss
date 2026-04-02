@@ -15,7 +15,7 @@ export async function login(email: string, password: string): Promise<string> {
     throw AppError.unauthorized('Invalid email or password');
   }
 
-  if (user.status === 'INACTIVE') {
+  if ((user.status as string) === 'INACTIVE') {
     throw AppError.unauthorized('Account is inactive');
   }
 
